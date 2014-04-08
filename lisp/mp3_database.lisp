@@ -14,12 +14,18 @@
   (make-cd
     (prompt-read "Title")
     (prompt-read "Artist")
-    (parse-integer (prompt-read "Rating"))
-    (prompt-read "Ripped [y/n]")
+    (or (parse-integer (prompt-read "Rating") :junk-allowed t) 0)
+    (y-or-n-p "Ripped [y/n]")
 ))
 
 (defun dump-db()
   (dolist (cd *db*)
     (format *standard-output* "~{~a:~10t~a~%~}~%" cd)))
 
+(defun add-cds()
+  (loop (add-record (prompt-for-cd))
+    (if (not (y-or-n-p "Add another?[Y/n]"))
+      (return))))
+
+(add-cds)
 (dump-db)
